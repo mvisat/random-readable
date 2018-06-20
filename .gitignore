@@ -1,3 +1,6 @@
+# Dist directories
+dist/
+
 # Logs
 logs
 *.log

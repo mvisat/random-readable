@@ -1,6 +1,6 @@
 {
   "name": "random-readable",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Generate a readable stream of random bytes",
   "main": "dist/index.js",
   "scripts": {

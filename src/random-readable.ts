@@ -36,3 +36,7 @@ export class RandomReadable extends Readable {
         });
     }
 }
+
+export function createRandomStream(opts?: RandomReadableOptions): RandomReadable {
+    return new RandomReadable(opts);
+}

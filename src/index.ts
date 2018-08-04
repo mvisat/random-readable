@@ -1,3 +1,3 @@
-import { RandomReadable, RandomReadableOptions } from './random-readable';
+import { createRandomStream } from './random-readable';
 
-export { RandomReadable, RandomReadableOptions };
+export { createRandomStream };

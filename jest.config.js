@@ -15,4 +15,5 @@ module.exports = {
     "node"
   ],
   collectCoverage: true,
+  testEnvironment: "node",
 }

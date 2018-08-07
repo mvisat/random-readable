@@ -1,7 +1,7 @@
 import { createRandomStream, RandomReadableOptions } from '../random-readable';
 
 function testDefinedData(done: jest.DoneCallback, size: number) {
-    const stream = createRandomStream({ size: size });
+    const stream = createRandomStream({ size });
     let current = 0;
 
     expect.assertions(1);
@@ -29,7 +29,7 @@ function testInfiniteData(done: jest.DoneCallback, opts?: RandomReadableOptions)
             }
         })
         .on('error', err => {
-            expect(() => { throw err }).toThrowError(error);
+            expect(() => { throw err; }).toThrowError(error);
             done();
         })
         .resume();
@@ -39,7 +39,7 @@ function testError(done: jest.DoneCallback, error: Error) {
     const stream = createRandomStream();
     stream
         .on('error', err => {
-            expect(() => { throw err }).toThrowError(error);
+            expect(() => { throw err; }).toThrowError(error);
             done();
         })
         .resume();
@@ -49,7 +49,7 @@ describe('stream emits no data', () => {
     test('when size is 0', (done) => {
         testDefinedData(done, 0);
     });
-})
+});
 
 describe('stream emits data', () => {
     test('when size is valid', (done) => {

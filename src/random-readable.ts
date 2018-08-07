@@ -1,5 +1,5 @@
-import { Readable, ReadableOptions } from 'stream';
 import { randomBytes } from 'crypto';
+import { Readable, ReadableOptions } from 'stream';
 
 export interface RandomReadableOptions extends ReadableOptions {
     size?: number;
@@ -19,7 +19,7 @@ export class RandomReadable extends Readable {
         this.currentSize = 0;
     }
 
-    _read(size: number) {
+    public _read(size: number) {
         if (this.currentSize >= this.size) {
             return this.push(null);
         } else if (this.currentSize + size >= this.size) {

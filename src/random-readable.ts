@@ -27,8 +27,9 @@ class RandomReadable extends Readable {
         this.currentSize += size;
 
         randomBytes(size, (err, buf) => {
-            if (this.destroyed)
+            if (this.destroyed) {
                 return;
+            }
 
             if (err) {
                 process.nextTick(() => this.emit('error', err));
@@ -40,6 +41,6 @@ class RandomReadable extends Readable {
 
     public _destroy(error: Error | null, callback: (error: Error | null) => void) {
         this.destroyed = true;
-        super._destroy(error, callback)
+        super._destroy(error, callback);
     }
 }

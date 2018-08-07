@@ -5,6 +5,7 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "rimraf dist && tsc",
+        "lint": "tslint --project ./tsconfig.json",
         "test": "jest"
     },
     "repository": {
@@ -28,6 +29,8 @@
         "jest": "^23.4.2",
         "rimraf": "^2.6.2",
         "ts-jest": "^23.1.2",
+        "tslint": "^5.11.0",
+        "tslint-eslint-rules": "^5.3.1",
         "typescript": "^3.0.1"
     },
     "engines": {

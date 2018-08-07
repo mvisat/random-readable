@@ -8,7 +8,7 @@ export function createRandomStream(size?: number): RandomReadable {
 class RandomReadable extends Readable {
     private size = Infinity;
     private currentSize = 0;
-    private destroyed = false;
+    private isDestroyed = false;
 
     constructor(size?: number) {
         super();
@@ -27,7 +27,7 @@ class RandomReadable extends Readable {
         this.currentSize += size;
 
         randomBytes(size, (err, buf) => {
-            if (this.destroyed) {
+            if (this.isDestroyed) {
                 return;
             }
 
@@ -40,7 +40,7 @@ class RandomReadable extends Readable {
     }
 
     public _destroy(error: Error | null, callback: (error: Error | null) => void) {
-        this.destroyed = true;
+        this.isDestroyed = true;
         super._destroy(error, callback);
     }
 }

@@ -36,8 +36,8 @@ const random = require('random-readable');
 const stream = random.createRandomStream();
 stream.pipe(process.stdout);
 
-// stop after 3 secs to prevent infinite loop.
-setTimeout(() => { stream.destroy(); }, 3000);
+// stop after 250ms to prevent infinite loop.
+setTimeout(() => { stream.destroy(); }, 250);
 ```
 
 ### Event Listeners

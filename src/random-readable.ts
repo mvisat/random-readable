@@ -1,22 +1,20 @@
 import { randomBytes } from 'crypto';
-import { Readable, ReadableOptions } from 'stream';
+import { Readable } from 'stream';
 
-export interface RandomReadableOptions extends ReadableOptions {
-    size?: number;
+export function createRandomStream(size?: number): RandomReadable {
+    return new RandomReadable(size);
 }
 
-export class RandomReadable extends Readable {
-    private size: number;
-    private currentSize: number;
+class RandomReadable extends Readable {
+    private size = Infinity;
+    private currentSize = 0;
 
-    constructor(opts?: RandomReadableOptions) {
-        super(opts);
-        if (opts && typeof opts.size === 'number' && opts.size >= 0) {
-            this.size = opts.size;
-        } else {
-            this.size = Infinity;
+    constructor(size?: number) {
+        super();
+
+        if (typeof size === 'number' && size >= 0) {
+            this.size = size;
         }
-        this.currentSize = 0;
     }
 
     public _read(size: number) {
@@ -35,8 +33,4 @@ export class RandomReadable extends Readable {
             this.push(buf);
         });
     }
-}
-
-export function createRandomStream(opts?: RandomReadableOptions): RandomReadable {
-    return new RandomReadable(opts);
 }

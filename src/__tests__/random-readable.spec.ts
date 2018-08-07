@@ -1,7 +1,7 @@
-import { createRandomStream, RandomReadableOptions } from '../random-readable';
+import { createRandomStream } from '../random-readable';
 
 function testDefinedData(done: jest.DoneCallback, size: number) {
-    const stream = createRandomStream({ size });
+    const stream = createRandomStream(size);
     let current = 0;
 
     expect.assertions(1);
@@ -16,15 +16,16 @@ function testDefinedData(done: jest.DoneCallback, size: number) {
         .resume();
 }
 
-function testInfiniteData(done: jest.DoneCallback, opts?: RandomReadableOptions) {
-    const stream = createRandomStream(opts);
+function testInfiniteData(done: jest.DoneCallback, size?: number) {
+    const stream = createRandomStream(size);
     const error = new Error('infinite test');
+    const N = 100;
     let count = 0;
 
     stream
         .on('data', data => {
             expect(data.length).toBeGreaterThan(0);
-            if (count++ >= 10) {
+            if (count++ >= N) {
                 stream.destroy(error);
             }
         })
@@ -36,8 +37,7 @@ function testInfiniteData(done: jest.DoneCallback, opts?: RandomReadableOptions)
 }
 
 function testError(done: jest.DoneCallback, error: Error) {
-    const stream = createRandomStream();
-    stream
+    createRandomStream()
         .on('error', err => {
             expect(() => { throw err; }).toThrowError(error);
             done();
@@ -58,16 +58,16 @@ describe('stream emits data', () => {
 });
 
 describe('stream emits infinite data', () => {
-    test('when option is undefined', (done) => {
+    test('when size is undefined', (done) => {
         testInfiniteData(done);
     });
 
-    test('when size is omitted', (done) => {
-        testInfiniteData(done, {});
+    test('when size has negative value', (done) => {
+        testInfiniteData(done, -1);
     });
 
-    test('when size has negative value', (done) => {
-        testInfiniteData(done, { size: -1 });
+    test('when size is NaN', (done) => {
+        testInfiniteData(done, NaN);
     });
 });
 

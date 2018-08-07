@@ -8,7 +8,7 @@ export interface RandomReadableOptions extends ReadableOptions {
 export class RandomReadable extends Readable {
     private size: number;
     private currentSize: number;
-    private destroyed: boolean;
+    private isDestroyed: boolean;
 
     constructor(opts?: RandomReadableOptions) {
         super(opts);
@@ -18,7 +18,7 @@ export class RandomReadable extends Readable {
             this.size = Infinity;
         }
         this.currentSize = 0;
-        this.destroyed = false;
+        this.isDestroyed = false;
     }
 
     _read(size: number) {
@@ -30,8 +30,9 @@ export class RandomReadable extends Readable {
         this.currentSize += size;
 
         randomBytes(size, (err, buf) => {
-            if (this.destroyed)
+            if (this.isDestroyed) {
                 return;
+            }
 
             if (err) {
                 process.nextTick(() => this.emit('error', err));
@@ -42,8 +43,8 @@ export class RandomReadable extends Readable {
     }
 
     public _destroy(error: Error | null, callback: (error: Error | null) => void) {
-        this.destroyed = true;
-        super._destroy(error, callback)
+        this.isDestroyed = true;
+        super._destroy(error, callback);
     }
 }
 

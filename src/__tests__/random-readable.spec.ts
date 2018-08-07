@@ -6,7 +6,7 @@ function testDefinedData(done: jest.DoneCallback, size: number) {
 
     expect.assertions(1);
     stream
-        .on('data', data => {
+        .on('data', (data) => {
             current += data.length;
         })
         .on('end', () => {
@@ -23,22 +23,13 @@ function testInfiniteData(done: jest.DoneCallback, size?: number) {
     let count = 0;
 
     stream
-        .on('data', data => {
+        .on('data', (data) => {
             expect(data.length).toBeGreaterThan(0);
             if (count++ >= N) {
                 stream.destroy(error);
             }
         })
-        .on('error', err => {
-            expect(() => { throw err; }).toThrowError(error);
-            done();
-        })
-        .resume();
-}
-
-function testError(done: jest.DoneCallback, error: Error) {
-    createRandomStream()
-        .on('error', err => {
+        .on('error', (err) => {
             expect(() => { throw err; }).toThrowError(error);
             done();
         })
@@ -73,11 +64,20 @@ describe('stream emits infinite data', () => {
 
 describe('stream emits errors', () => {
     test('when error occured in randomBytes()', (done) => {
-        const crypto = require.requireActual('crypto');
         const error = new Error('randomBytes() error');
-        crypto.randomBytes = jest.fn((size, callback) => {
+        const crypto = require('crypto');
+        const mockRandomBytes = jest.fn((size, callback) => {
             callback(error);
         });
-        testError(done, error);
+        const actualRandomBytes = crypto.randomBytes;
+        crypto.randomBytes = mockRandomBytes;
+        createRandomStream()
+            .on('error', err => {
+                expect(mockRandomBytes).toHaveBeenCalled();
+                expect(() => { throw err; }).toThrowError(error);
+                crypto.randomBytes = actualRandomBytes;
+                done();
+            })
+            .resume();
     });
 });

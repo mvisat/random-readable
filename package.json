@@ -1,12 +1,12 @@
 {
     "name": "random-readable",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "Generate a readable stream of random bytes",
     "main": "dist/index.js",
     "scripts": {
         "build": "rimraf dist && tsc",
         "lint": "tslint --project ./tsconfig.json",
-        "prepublish": "build",
+        "prepublish": "npm run build",
         "test": "jest"
     },
     "repository": {

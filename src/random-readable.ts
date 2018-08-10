@@ -1,25 +1,24 @@
-import { Readable, ReadableOptions } from 'stream';
 import { randomBytes } from 'crypto';
+import { Readable } from 'stream';
 
-export interface RandomReadableOptions extends ReadableOptions {
-    size?: number;
+export function createRandomStream(size?: number): RandomReadable {
+    return new RandomReadable(size);
 }
 
-export class RandomReadable extends Readable {
-    private size: number;
-    private currentSize: number;
+class RandomReadable extends Readable {
+    private size = Infinity;
+    private currentSize = 0;
+    private destroyed = false;
 
-    constructor(opts?: RandomReadableOptions) {
-        super(opts);
-        if (opts && typeof opts.size === 'number' && opts.size >= 0) {
-            this.size = opts.size;
-        } else {
-            this.size = Infinity;
+    constructor(size?: number) {
+        super();
+
+        if (typeof size === 'number' && size >= 0) {
+            this.size = size;
         }
-        this.currentSize = 0;
     }
 
-    _read(size: number) {
+    public _read(size: number) {
         if (this.currentSize >= this.size) {
             return this.push(null);
         } else if (this.currentSize + size >= this.size) {
@@ -28,6 +27,10 @@ export class RandomReadable extends Readable {
         this.currentSize += size;
 
         randomBytes(size, (err, buf) => {
+            if (this.destroyed) {
+                return;
+            }
+
             if (err) {
                 process.nextTick(() => this.emit('error', err));
                 return;
@@ -35,8 +38,9 @@ export class RandomReadable extends Readable {
             this.push(buf);
         });
     }
-}
 
-export function createRandomStream(opts?: RandomReadableOptions): RandomReadable {
-    return new RandomReadable(opts);
+    public _destroy(error: Error | null, callback: (error: Error | null) => void) {
+        this.destroyed = true;
+        super._destroy(error, callback);
+    }
 }

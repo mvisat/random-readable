@@ -1,5 +1,5 @@
 # random-readable
-Create a [readable stream](https://nodejs.org/api/stream.html#stream_readable_streams) of random bytes using [crypto.randomBytes](https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback).
+Create a [readable stream](https://nodejs.org/api/stream.html#stream_readable_streams) of cryptographically secure random bytes using [crypto.randomBytes](https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback).
 
 ## Install
 ```

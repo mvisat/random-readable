@@ -6,6 +6,7 @@
     "scripts": {
         "build": "rimraf dist && tsc",
         "lint": "tslint --project ./tsconfig.json",
+        "prepublishOnly": "yarn build",
         "test": "jest"
     },
     "repository": {
